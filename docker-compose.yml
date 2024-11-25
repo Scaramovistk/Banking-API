@@ -1,0 +1,18 @@
+version: "3"
+
+services:
+  banking-api:
+    container_name: banking-api
+    image: banking-api
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/api
+    networks:
+      - banking-api_network
+    restart: always
+
+networks:
+  banking-api_network:
+    name: banking-api_network
