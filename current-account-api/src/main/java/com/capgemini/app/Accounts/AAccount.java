@@ -1,24 +1,31 @@
-package com.capgemini.app;
+package com.capgemini.app.Accounts;
 
 import java.util.ArrayList;
-
 import java.util.List;
-
 import java.math.BigDecimal;
+import java.util.UUID;
 
 public class AAccount {
-	protected int customerID;
+	protected final UUID customerID;
 	protected String name;
+	protected String surname;
 	protected BigDecimal balance;
-	protected List<BigDecimal> ledger = new ArrayList<>();
+	private List<BigDecimal> ledger = new ArrayList<>();
+	//Transaction ID
 
-	public AAccount(int customerID, String name, double balance) {
+	public AAccount(UUID customerID, BigDecimal balance) {
 		this.customerID = customerID;
-		this.name = name;
-		this.balance = BigDecimal.valueOf(balance);
+		this.name = "Bruce"; //Take from USERS
+		this.surname = "Lee";
+		this.balance = BigDecimal.ZERO;
+
+		if (balance.compareTo(BigDecimal.ZERO) != 0)
+			this.addTransaction((balance));
 	}
 
-	public int getCustomerID() {
+	//Seter for new values
+
+	public UUID getCustomerID() {
 		return this.customerID;
 	}
 
@@ -32,6 +39,7 @@ public class AAccount {
 
 	private void updateBalance() {
 		BigDecimal totalAmount = BigDecimal.ZERO;
+
 		for (BigDecimal transaction : ledger) {
 			totalAmount = totalAmount.add(transaction);
 		}
@@ -43,4 +51,5 @@ public class AAccount {
 		this.updateBalance();
 	}
 
+	// Cancel Transaction, send a negative to it and message ?
 }

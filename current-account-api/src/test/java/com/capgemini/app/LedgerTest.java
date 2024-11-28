@@ -1,56 +1,56 @@
 package com.capgemini.app;
 
 import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.Test;
-
+import com.capgemini.app.Accounts.AAccount;
 import java.math.BigDecimal;
+import java.util.UUID;
 
 public class LedgerTest {
 
 	@Test
 	public void balanceTest() {
-		AAccount account = new AAccount(1, "test", 0);
+		AAccount account = new AAccount(UUID.randomUUID(), BigDecimal.valueOf(0));
 
 		assertEquals(0, account.getBalance());
 	}
 
 	@Test
 	public void initialBalanceTest() {
-		AAccount account = new AAccount(1, "test", 10.5);
+		AAccount account = new AAccount(UUID.randomUUID(), BigDecimal.valueOf(10.5));
 
 		assertEquals(10.50, account.getBalance());
 	}
 
 	@Test
 	public void oneTransactionTest() {
-		AAccount account = new AAccount(1, "test", 0);
-
+		AAccount account = new AAccount(UUID.randomUUID(), BigDecimal.valueOf(0));
+		
 		account.addTransaction(BigDecimal.valueOf(10));
 		assertEquals(10.0, account.getBalance());
 	}
 
 	@Test
 	public void negativeTransactionTest() {
-		AAccount account = new AAccount(1, "test", 0);
+		AAccount account = new AAccount(UUID.randomUUID(), BigDecimal.valueOf(0));
 		
 		account.addTransaction(BigDecimal.valueOf(10));
 		account.addTransaction(BigDecimal.valueOf(-5));
 		assertEquals(5.0, account.getBalance());
 	}
-	
+
 	@Test
 	public void floatPointTransactionTest() {
-		AAccount account = new AAccount(1, "test", 0.0);
+		AAccount account = new AAccount(UUID.randomUUID(), BigDecimal.valueOf(0));
 		
 		account.addTransaction(BigDecimal.valueOf(10));
 		account.addTransaction(BigDecimal.valueOf(-5.5));
 		assertEquals(4.5, account.getBalance());
 	}
-	
+
 	@Test
 	public void multipleTransactionTest() {
-		AAccount account = new AAccount(1, "test", 0.0);
+		AAccount account = new AAccount(UUID.randomUUID(), BigDecimal.valueOf(0));
 
 		account.addTransaction(BigDecimal.valueOf(10));
 		account.addTransaction(BigDecimal.valueOf(-5.5));
@@ -65,7 +65,7 @@ public class LedgerTest {
 
 	@Test
 	public void truncatedTransactionTest() {
-		AAccount account = new AAccount(1, "test", 0.0);
+		AAccount account = new AAccount(UUID.randomUUID(), BigDecimal.valueOf(0));
 
 		account.addTransaction(BigDecimal.valueOf(10));
 		account.addTransaction(BigDecimal.valueOf(-5.5));
