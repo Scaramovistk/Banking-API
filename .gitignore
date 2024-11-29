@@ -1,1 +1,9 @@
 .DS_Store
+target/
+*.jar
+*.war
+*.ear
+*.logs
+*.iml
+.idea/
+.eclipse

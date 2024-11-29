@@ -7,7 +7,7 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y  \
 	openjdk-17-jre \
 	maven
 
-WORKDIR /api
+WORKDIR /home
 
 RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
