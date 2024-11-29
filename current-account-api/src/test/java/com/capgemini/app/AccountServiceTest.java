@@ -3,25 +3,33 @@ package com.capgemini.app;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.capgemini.app.Entity.Account;
 import com.capgemini.app.Service.AccountService;
+import com.capgemini.app.Repository.AccountRepository;
 
 public class AccountServiceTest {
+
+	private AccountRepository repository;
+
+	@BeforeEach
+	public void setUp() {
+		repository = AccountRepository.getInstance();
+	}
 
 	@Test
 	public void createAccountWithInitialBalance() {
 		UUID uuid = UUID.randomUUID();
 		AccountService.createCurrentAccount(uuid, BigDecimal.valueOf(10));
 
-		Account account = AccountService.getCurrentAccount(uuid);
+		Account account = repository.getAccount(uuid);
 		assertNotNull(account);
 		assertEquals(BigDecimal.valueOf(10.00).setScale(2), account.getBalance());
 	}
@@ -31,7 +39,7 @@ public class AccountServiceTest {
 		UUID uuid = UUID.randomUUID();
 		AccountService.createCurrentAccount(uuid, BigDecimal.ZERO);
 
-		Account account = AccountService.getCurrentAccount(uuid);
+		Account account = repository.getAccount(uuid);
 		assertNotNull(account);
 		assertEquals(BigDecimal.ZERO.setScale(2), account.getBalance());
 	}
@@ -39,9 +47,9 @@ public class AccountServiceTest {
 	@Test
 	public void retrieveNonExistentAccount() {
 		UUID uuid = UUID.randomUUID();
-		Account account = AccountService.getCurrentAccount(uuid);
+		Account account = repository.getAccount(uuid);
 
-		assertNull(account); // Should return null for non-existent accounts
+		assertNull(account);
 	}
 
 	@Test
@@ -52,8 +60,8 @@ public class AccountServiceTest {
 		AccountService.createCurrentAccount(uuid1, BigDecimal.valueOf(100));
 		AccountService.createCurrentAccount(uuid2, BigDecimal.valueOf(50));
 
-		Account account1 = AccountService.getCurrentAccount(uuid1);
-		Account account2 = AccountService.getCurrentAccount(uuid2);
+		Account account1 = repository.getAccount(uuid1);
+		Account account2 = repository.getAccount(uuid2);
 
 		assertNotNull(account1);
 		assertNotNull(account2);
@@ -66,7 +74,7 @@ public class AccountServiceTest {
 		UUID uuid = UUID.randomUUID();
 		AccountService.createCurrentAccount(uuid, BigDecimal.valueOf(20));
 
-		Account account = AccountService.getCurrentAccount(uuid);
+		Account account = repository.getAccount(uuid);
 		account.addTransaction(BigDecimal.valueOf(30));
 
 		assertEquals(BigDecimal.valueOf(50.00).setScale(2), account.getBalance());
@@ -77,9 +85,19 @@ public class AccountServiceTest {
 		UUID uuid = UUID.randomUUID();
 		AccountService.createCurrentAccount(uuid, BigDecimal.valueOf(50));
 
-		Account account = AccountService.getCurrentAccount(uuid);
+		Account account = repository.getAccount(uuid);
 		account.addTransaction(BigDecimal.valueOf(-20));
 
 		assertEquals(BigDecimal.valueOf(30.00).setScale(2), account.getBalance());
+	}
+
+	@Test
+	public void createAccountWithInvalidCustomerID() {
+		UUID invalidUUID = UUID.randomUUID();
+		boolean result = AccountService.createCurrentAccount(invalidUUID, BigDecimal.valueOf(100));
+
+		assertFalse(result);
+		Account account = repository.getAccount(invalidUUID);
+		assertNull(account);
 	}
 }
