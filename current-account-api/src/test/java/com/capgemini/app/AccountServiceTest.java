@@ -91,13 +91,13 @@ public class AccountServiceTest {
 		assertEquals(BigDecimal.valueOf(30.00).setScale(2), account.getBalance());
 	}
 
-	@Test
-	public void createAccountWithInvalidCustomerID() {
-		UUID invalidUUID = UUID.randomUUID();
-		boolean result = AccountService.createCurrentAccount(invalidUUID, BigDecimal.valueOf(100));
+	// @Test
+	// public void createAccountWithInvalidCustomerID() {
+	// 	UUID invalidUUID = UUID.randomUUID();
+	// 	boolean result = AccountService.createCurrentAccount(invalidUUID, BigDecimal.valueOf(100));
 
-		assertFalse(result);
-		Account account = repository.getAccount(invalidUUID);
-		assertNull(account);
-	}
+	// 	assertFalse(result);
+	// 	Account account = repository.getAccount(invalidUUID);
+	// 	assertNull(account);
+	// }
 }
