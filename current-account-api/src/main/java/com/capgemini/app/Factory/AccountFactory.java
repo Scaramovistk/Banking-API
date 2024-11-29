@@ -3,20 +3,18 @@ package com.capgemini.app.Factory;
 import java.util.UUID;
 
 import com.capgemini.app.Entity.Account;
+import com.capgemini.app.Repository.AccountRepository;
 
 public class AccountFactory {
+	private static AccountRepository repository = AccountRepository.getInstance();
 
-	public AccountFactory() {
-
-	}
-	
-	public Account createAccount(UUID customerID, String name, String surname)
-	{
-		// Checker if ID is valid
-		Account new_account = new Account(customerID, surname, surname);
-			return new_account;
-		
+	private AccountFactory() {
+		repository = AccountRepository.getInstance();
 	}
 
-
+	public static Account createAccount(UUID customerID, String name, String surname) {
+		if (!repository.checkID(customerID)) 
+			return new Account(customerID, name, surname);
+		return null; //Exception ?
+	}
 }
