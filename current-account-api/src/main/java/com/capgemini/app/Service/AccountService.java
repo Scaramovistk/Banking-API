@@ -14,27 +14,46 @@ public class AccountService {
 
 	private static AccountRepository repository = AccountRepository.getInstance();
 
-	public static void createCurrentAccount(UUID customerID, BigDecimal balance) {
-		Account newAccount = AccountFactory.createAccount(customerID, "Bruce", "Lee"); //Take User infor and replace
+	public static boolean createCurrentAccount(UUID customerID, BigDecimal balance) {
+		Account newAccount = AccountFactory.createAccount(customerID, "Bruce", "Lee"); // Take User info and replace
 
-		//Add enum for account type
-		if (!balance.equals(BigDecimal.ZERO))
+		if (newAccount == null) {
+			return false;
+		}
+
+		// Add enum for account type
+		if (!balance.equals(BigDecimal.ZERO)) {
 			newAccount.addTransaction(balance);
+		}
 		repository.saveAccount(newAccount);
+		return true;
 	}
 
-	public static Account getCurrentAccount(UUID customerID) {
+	public static String getCurrentAccount(UUID customerID) {
 		Account account = repository.getAccount(customerID);
-
-		if (account == null)
+		if (account == null) {
 			return null;
-		return account;
+		}
+		StringBuilder str = new StringBuilder(); //Move all to a Builder
+		str.append(account.getCustomerID().toString());
+		str.append(" ");
+		str.append(account.getName());
+		str.append(" ");
+		str.append(account.getSurname());
+		str.append(" ");
+		str.append(account.getBalance().toString());
+		str.append('\n'); //Is it needed?
+		// Missing transactions
+		return str.toString();
 	}
 
-	public static void deleteAccount(UUID customerID) {
+	public static boolean deleteAccount(UUID customerID) {
 		Account account = repository.getAccount(customerID);
 
-		if (account != null) // Check if account exists else ?
+		if (account != null) {
 			repository.deleteAccount(customerID);
+			return true;
+		}
+		return false;
 	}
 }
