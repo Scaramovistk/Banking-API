@@ -1,29 +1,40 @@
 package com.capgemini.app.Service;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.UUID;
+
+import org.springframework.stereotype.Service;
 
 import com.capgemini.app.Entity.Account;
 import com.capgemini.app.Factory.AccountFactory;
 import com.capgemini.app.Repository.AccountRepository;
 
+@Service
 public class AccountService {
 
-	private static AccountFactory factory = new AccountFactory();
 	private static AccountRepository repository = AccountRepository.getInstance();
-	private static HashMap<UUID, Account> accounts = new HashMap<>();
 
 	public static void createCurrentAccount(UUID customerID, BigDecimal balance) {
-		Account newAccount = factory.createAccount(customerID, "Bruce", "Lee");
-		accounts.put(customerID, newAccount);
+		Account newAccount = AccountFactory.createAccount(customerID, "Bruce", "Lee"); //Take User infor and replace
 
-		if (!balance.equals(BigDecimal.ZERO)) {
+		//Add enum for account type
+		if (!balance.equals(BigDecimal.ZERO))
 			newAccount.addTransaction(balance);
-		}
+		repository.saveAccount(newAccount);
 	}
 
 	public static Account getCurrentAccount(UUID customerID) {
-		return accounts.get(customerID); // Return account if it exists
+		Account account = repository.getAccount(customerID);
+
+		if (account == null)
+			return null;
+		return account;
+	}
+
+	public static void deleteAccount(UUID customerID) {
+		Account account = repository.getAccount(customerID);
+
+		if (account != null) // Check if account exists else ?
+			repository.deleteAccount(customerID);
 	}
 }
