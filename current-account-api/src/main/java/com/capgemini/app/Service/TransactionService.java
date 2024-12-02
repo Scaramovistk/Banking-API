@@ -1,33 +1,54 @@
 package com.capgemini.app.Service;
 
 import java.math.BigDecimal;
-import java.nio.charset.StandardCharsets;
-import java.util.UUID;
+import java.util.List;
 
+import com.capgemini.app.Entity.Account;
 import com.capgemini.app.Entity.Transaction;
-import com.google.common.hash.Hashing;
+import com.capgemini.app.Repository.AccountRepository;
 
 public class TransactionService {
 
-	public static Transaction buildTransaction(UUID customerID ,BigDecimal amount) {
+	private static long transactionCounter = 0;
 
+	public static List<Transaction> getLedger(Account account) {
+		if (account == null) {
+			return null;
+		}
+		return account.getLedger();
+	}
+
+	public static Transaction getTransaction(Account account, String index) {
+		if (account == null) {
+			return null;
+		}
+		List<Transaction> ledger = account.getLedger();
+		for (Transaction transaction : ledger) {
+			if (transaction.getTransactionID().equals(index)) {
+				return transaction;
+			}
+		}
+		return null;
+	}
+
+	public static Transaction buildTransaction(Account account, BigDecimal amount) {
 		Transaction transaction = new Transaction();
 		transaction.setTransactionID(generateTransactionId());
 		transaction.setAmount(amount);
-		transaction.setPrevTxHash(generatePrevTxHash()); //GEt from repository 
-
 		return transaction;
 	}
 
-	private static String generateTransactionId() {
-		String timestamp = String.valueOf(System.currentTimeMillis());
-		String randomPart = UUID.randomUUID().toString().substring(0, 8);
-		return "TXN-" + timestamp + "-" + randomPart;
+	public static boolean addTransaction(Account account, Transaction transaction) {
+		if (account == null || transaction == null) {
+			return false;
+		}
+		account.addTransaction(transaction);
+		AccountRepository repository = AccountRepository.getInstance();
+		repository.updateAccount(account);
+		return true;
 	}
 
-	private static String generatePrevTxHash() {
-		return Hashing.sha256()
-				.hashString(new Transaction().toString(), StandardCharsets.UTF_8) //Hash could be id + prevHash
-				.toString();
+	private static String generateTransactionId() {
+		return String.valueOf(transactionCounter++);
 	}
 }
