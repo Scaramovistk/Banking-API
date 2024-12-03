@@ -16,15 +16,18 @@ public class AccountService {
 	private static AccountRepository repository = AccountRepository.getInstance();
 
 	public static boolean buildCurrentAccount(UUID customerID, BigDecimal balance) {
-		Account newAccount = AccountFactory.createAccount(customerID, "Bjarne", "Stroustrup"); // Take User info and replace
+		Account newAccount = AccountFactory.createAccount(customerID, "Bjarne", "Stroustrup"); // Take User info and
 
 		if (newAccount != null) {
-			if (!balance.equals(BigDecimal.ZERO)) {
-				Transaction transaction = TransactionService.buildTransaction(newAccount, balance);
-
-				TransactionService.addTransaction(newAccount, transaction);
-			}
 			repository.saveAccount(newAccount);
+			if (balance == null || balance.compareTo(BigDecimal.ZERO) < 0) {
+				throw new IllegalArgumentException("Initial balance cannot be null or negative");
+			}
+			if (balance.compareTo(BigDecimal.ZERO) != 0) {
+				Transaction transaction = TransactionService.buildTransaction(newAccount, balance);
+				TransactionService.addTransaction(newAccount, transaction);
+				updateAccount(newAccount);
+			}
 			return true;
 		}
 		return false;
@@ -38,12 +41,17 @@ public class AccountService {
 		return account;
 	}
 
-	// Mssing updateAccount method
+	public static boolean updateAccount(Account account) {
+		if (account != null) {
+			repository.updateAccount(account);
+			return true;
+		}
+		return false;
+	}
 
 	public static boolean deleteAccount(UUID customerID) {
 		Account account = repository.getAccount(customerID);
-
-		if (account != null) { // Refactor
+		if (account != null) {
 			repository.deleteAccount(customerID);
 			return true;
 		}
