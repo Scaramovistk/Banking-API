@@ -12,6 +12,14 @@ services:
     networks:
       - banking-api_network
     restart: always
+    environment:
+      - APPLICATION_IP=${APPLICATION_IP:-127.0.0.1}
+      - APPLICATION_URL=${APPLICATION_URL:-https://127.0.0.1}
+    ports:
+      - "443:443"
+    cap_add:
+      - NET_BIND_SERVICE
+    entrypoint: ["/bin/sh", "-c", "./utils/add_env_file.sh /home/.env && exec /home/entrypoint.sh"]
 
 networks:
   banking-api_network:
