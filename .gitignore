@@ -1,4 +1,5 @@
 .DS_Store
+.env
 target/
 *.jar
 *.war
@@ -7,3 +8,6 @@ target/
 *.iml
 .idea/
 .eclipse
+*.key
+*.crt
+*.p12
