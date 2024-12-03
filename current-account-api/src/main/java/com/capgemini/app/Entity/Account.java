@@ -2,18 +2,23 @@ package com.capgemini.app.Entity;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
 public class Account {
-	protected UUID _customerID;
-	protected String _name;
-	protected String _surname;
-	protected BigDecimal _balance;
-	private List<BigDecimal> _ledger = new ArrayList<>();
-	// Enum to define account type
+	private UUID _customerID;
+	private String _name;
+	private String _surname;
+	private BigDecimal _balance;
+	private List<Transaction> _ledger = new LinkedList<>();
 
+	public Account() {
+		this._customerID = UUID.randomUUID();
+		this._name = "";
+		this._surname = "";
+		this._balance = BigDecimal.ZERO;
+	}
 	public Account(UUID customerID, String name, String surname) {
 		this._customerID = customerID;
 		this._name = name;
@@ -53,29 +58,29 @@ public class Account {
 		this._balance = balance;
 	}
 
-	public List<BigDecimal> getLedger() {
+	public List<Transaction> getLedger() {
 		return _ledger;
 	}
 
-	public void setLedger(List<BigDecimal> ledger) {
+	public void setLedger(List<Transaction> ledger) {
 		this._ledger = ledger;
+		this.updateBalance();
+	}
+
+	public void addTransaction(Transaction transaction) {
+		if (transaction == null) {
+			throw new IllegalArgumentException("Transaction cannot be null");
+		}
+		_ledger.add(transaction);
 		this.updateBalance();
 	}
 
 	private void updateBalance() {
 		BigDecimal totalAmount = BigDecimal.ZERO;
 
-		for (BigDecimal transaction : _ledger) {
-			totalAmount = totalAmount.add(transaction);
+		for (Transaction transaction : _ledger) {
+			totalAmount = totalAmount.add(transaction.getAmount());
 		}
-		_balance = totalAmount;
-	}
-
-	public void addTransaction(BigDecimal transaction) {
-
-		if (transaction == null)
-			throw new IllegalArgumentException("Transaction cannot be null");
-		_ledger.add(transaction);
-		this.updateBalance();
+		this.setBalance(totalAmount);
 	}
 }
