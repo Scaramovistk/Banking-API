@@ -4,15 +4,21 @@ import java.math.BigDecimal;
 
 public class Transaction {
 
-	String _transactionID;
-	BigDecimal _amount;
+	private String _transactionID;
+	private BigDecimal _amount;
 
 	public Transaction() {
 		this._transactionID = "";
-		this._amount = new BigDecimal(0);
+		this._amount = BigDecimal.ZERO;
 	}
 
 	public Transaction(String transactionID, BigDecimal amount) {
+		if (transactionID == null) {
+			throw new IllegalArgumentException("Transaction ID cannot be null");
+		}
+		if (amount == null) {
+			throw new IllegalArgumentException("Amount cannot be null");
+		}
 		this._transactionID = transactionID;
 		this._amount = amount;
 	}
@@ -22,6 +28,9 @@ public class Transaction {
 	}
 
 	public void setTransactionID(String transactionID) {
+		if (transactionID == null) {
+			throw new IllegalArgumentException("Transaction ID cannot be null");
+		}
 		this._transactionID = transactionID;
 	}
 
