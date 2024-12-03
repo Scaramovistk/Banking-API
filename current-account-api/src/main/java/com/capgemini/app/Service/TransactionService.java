@@ -2,25 +2,23 @@ package com.capgemini.app.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 import com.capgemini.app.Entity.Account;
 import com.capgemini.app.Entity.Transaction;
-import com.capgemini.app.Repository.AccountRepository;
 
 public class TransactionService {
 
-	private static long transactionCounter = 0;
-
 	public static List<Transaction> getLedger(Account account) {
 		if (account == null) {
-			return null;
+			throw new IllegalArgumentException("Account cannot be null");
 		}
 		return account.getLedger();
 	}
 
 	public static Transaction getTransaction(Account account, String index) {
-		if (account == null) {
-			return null;
+		if (account == null || index == null) {
+			throw new IllegalArgumentException("Account and index cannot be null");
 		}
 		List<Transaction> ledger = account.getLedger();
 		for (Transaction transaction : ledger) {
@@ -32,23 +30,18 @@ public class TransactionService {
 	}
 
 	public static Transaction buildTransaction(Account account, BigDecimal amount) {
-		Transaction transaction = new Transaction();
-		transaction.setTransactionID(generateTransactionId());
-		transaction.setAmount(amount);
+		if (account == null || amount == null) {
+			throw new IllegalArgumentException("Account and amount cannot be null");
+		}
+		Transaction transaction = new Transaction(UUID.randomUUID().toString(), amount);
 		return transaction;
 	}
 
 	public static boolean addTransaction(Account account, Transaction transaction) {
 		if (account == null || transaction == null) {
-			return false;
+			throw new IllegalArgumentException("Account and transaction cannot be null");
 		}
 		account.addTransaction(transaction);
-		AccountRepository repository = AccountRepository.getInstance();
-		repository.updateAccount(account);
 		return true;
-	}
-
-	private static String generateTransactionId() {
-		return String.valueOf(transactionCounter++);
 	}
 }
