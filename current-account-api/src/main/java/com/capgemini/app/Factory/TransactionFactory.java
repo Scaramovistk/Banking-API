@@ -2,6 +2,7 @@ package com.capgemini.app.Factory;
 
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 import com.capgemini.app.Entity.Account;
 import com.capgemini.app.Entity.Transaction;
@@ -25,7 +26,7 @@ public class TransactionFactory {
 		return null;
 	}
 	
-		private static String generateTransactionId() {
-		return String.valueOf(transactionCounter++);
+	private static String generateTransactionId() {
+		return String.valueOf(transactionCounter++ + "-" + UUID.randomUUID());
 	}
 }
