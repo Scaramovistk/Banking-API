@@ -9,12 +9,16 @@ public class AccountFactory {
 	private static AccountRepository repository = AccountRepository.getInstance();
 
 	private AccountFactory() {
-		repository = AccountRepository.getInstance();
+
 	}
 
 	public static Account createAccount(UUID customerID, String name, String surname) {
-		if (!repository.checkID(customerID)) 
+		if (customerID == null || name == null || surname == null) {
+			throw new IllegalArgumentException("Customer ID, name, and surname cannot be null");
+		}
+		if (!repository.checkID(customerID)) {
 			return new Account(customerID, name, surname);
-		return null; //Exception ?
+		}
+		return null;
 	}
 }
