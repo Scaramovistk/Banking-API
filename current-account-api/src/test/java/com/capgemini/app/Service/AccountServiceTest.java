@@ -1,10 +1,10 @@
-package com.capgemini.app;
+package com.capgemini.app.Service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -50,6 +50,14 @@ public class AccountServiceTest {
 	}
 
 	@Test
+	public void createAccountWithNegativeBalance() {
+		UUID uuid = UUID.randomUUID();
+		assertThrows(IllegalArgumentException.class, () -> {
+			AccountService.buildCurrentAccount(uuid, BigDecimal.valueOf(-10));
+		});
+	}
+
+	@Test
 	public void retrieveNonExistentAccount() {
 		UUID uuid = UUID.randomUUID();
 		Account account = repository.getAccount(uuid);
@@ -88,27 +96,4 @@ public class AccountServiceTest {
 
 		assertEquals(BigDecimal.valueOf(50.00).setScale(2), account.getBalance());
 	}
-
-	@Test
-	public void accountWithNegativeTransaction() {
-		UUID uuid = UUID.randomUUID();
-		boolean result = AccountService.buildCurrentAccount(uuid, BigDecimal.valueOf(50));
-		assertTrue(result);
-
-		Account account = repository.getAccount(uuid);
-		Transaction transaction = TransactionService.buildTransaction(account, BigDecimal.valueOf(-20));
-		TransactionService.addTransaction(account, transaction);
-
-		assertEquals(BigDecimal.valueOf(30.00).setScale(2), account.getBalance());
-	}
-
-	// @Test
-	// public void createAccountWithInvalidCustomerID() {
-	// 	UUID invalidUUID = UUID.randomUUID();
-	// 	boolean result = AccountService.buildCurrentAccount(invalidUUID, BigDecimal.valueOf(100));
-
-	// 	assertFalse(result);
-	// 	Account account = repository.getAccount(invalidUUID);
-	// 	assertNull(account);
-	// }
 }

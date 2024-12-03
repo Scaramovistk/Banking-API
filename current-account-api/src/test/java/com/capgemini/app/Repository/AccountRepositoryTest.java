@@ -1,4 +1,4 @@
-package com.capgemini.app;
+package com.capgemini.app.Repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
