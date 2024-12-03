@@ -68,9 +68,9 @@ public class Account {
 	}
 
 	public void addTransaction(Transaction transaction) {
-
-		if (transaction == null)
+		if (transaction == null) {
 			throw new IllegalArgumentException("Transaction cannot be null");
+		}
 		_ledger.add(transaction);
 		this.updateBalance();
 	}
@@ -81,6 +81,6 @@ public class Account {
 		for (Transaction transaction : _ledger) {
 			totalAmount = totalAmount.add(transaction.getAmount());
 		}
-		_balance = totalAmount;
+		this.setBalance(totalAmount);
 	}
 }
