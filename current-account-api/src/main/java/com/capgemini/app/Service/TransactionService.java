@@ -2,10 +2,10 @@ package com.capgemini.app.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.UUID;
 
 import com.capgemini.app.Entity.Account;
 import com.capgemini.app.Entity.Transaction;
+import com.capgemini.app.Factory.TransactionFactory;
 
 public class TransactionService {
 
@@ -33,7 +33,7 @@ public class TransactionService {
 		if (account == null || amount == null) {
 			throw new IllegalArgumentException("Account and amount cannot be null");
 		}
-		Transaction transaction = new Transaction(UUID.randomUUID().toString(), amount);
+		Transaction transaction = TransactionFactory.createTransaction(account, amount);
 		return transaction;
 	}
 
