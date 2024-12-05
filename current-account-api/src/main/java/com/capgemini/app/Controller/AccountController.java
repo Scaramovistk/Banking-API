@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import com.capgemini.app.Entity.Account;
+import com.capgemini.app.Abstract.Account;
 import com.capgemini.app.Entity.AccountRequest;
 import com.capgemini.app.Entity.Transaction;
 import com.capgemini.app.Service.AccountService;
@@ -29,7 +29,7 @@ public class AccountController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Account> getAccount(@PathVariable UUID id) {
+	public ResponseEntity<Account> getCurrentAccount(@PathVariable UUID id) {
 		Account response = AccountService.getCurrentAccount(id);
 		if (response == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -38,7 +38,7 @@ public class AccountController {
 	}
 
 	@PostMapping
-	public ResponseEntity<String> createAccount(@RequestBody AccountRequest accountRequest) {
+	public ResponseEntity<String> createCurrentAccount(@RequestBody AccountRequest accountRequest) {
 		UUID id = accountRequest.getId();
 		BigDecimal balance = accountRequest.getBalance();
 

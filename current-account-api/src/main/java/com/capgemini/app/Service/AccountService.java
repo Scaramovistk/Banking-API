@@ -5,9 +5,9 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
-import com.capgemini.app.Entity.Account;
+import com.capgemini.app.Abstract.Account;
 import com.capgemini.app.Entity.Transaction;
-import com.capgemini.app.Factory.AccountFactory;
+import com.capgemini.app.Factory.CurrentAccountFactory;
 import com.capgemini.app.Repository.AccountRepository;
 
 @Service
@@ -16,13 +16,15 @@ public class AccountService {
 	private static AccountRepository repository = AccountRepository.getInstance();
 
 	public static boolean buildCurrentAccount(UUID customerID, BigDecimal balance) {
-		Account newAccount = AccountFactory.createAccount(customerID, "Bjarne", "Stroustrup"); // Take User info and
+		if (!isValidInput(customerID, balance)) {
+			return false;
+		}
 
+		Account userAccount = repository.getAccount(customerID);
+		Account newAccount = CurrentAccountFactory.createAccount(customerID, userAccount.getName(),
+				userAccount.getSurname());
 		if (newAccount != null) {
-			repository.saveAccount(newAccount);
-			if (balance == null || balance.compareTo(BigDecimal.ZERO) < 0) {
-				throw new IllegalArgumentException("Initial balance cannot be null or negative");
-			}
+			repository.saveCurrentAccount(newAccount);
 			if (balance.compareTo(BigDecimal.ZERO) != 0) {
 				Transaction transaction = TransactionService.buildTransaction(newAccount, balance);
 				TransactionService.addTransaction(newAccount, transaction);
@@ -33,8 +35,13 @@ public class AccountService {
 		return false;
 	}
 
+	private static boolean isValidInput(UUID customerID, BigDecimal balance) {
+		return customerID != null && balance != null && balance.compareTo(BigDecimal.ZERO) >= 0
+				&& repository.checkAccountID(customerID);
+	}
+
 	public static Account getCurrentAccount(UUID customerID) {
-		Account account = repository.getAccount(customerID);
+		Account account = repository.getCurrentAccount(customerID);
 		if (account == null) {
 			return null;
 		}
@@ -43,16 +50,16 @@ public class AccountService {
 
 	public static boolean updateAccount(Account account) {
 		if (account != null) {
-			repository.updateAccount(account);
+			repository.updateCurrentAccount(account);
 			return true;
 		}
 		return false;
 	}
 
 	public static boolean deleteAccount(UUID customerID) {
-		Account account = repository.getAccount(customerID);
+		Account account = repository.getCurrentAccount(customerID);
 		if (account != null) {
-			repository.deleteAccount(customerID);
+			repository.deleteCurrentAccount(customerID);
 			return true;
 		}
 		return false;
