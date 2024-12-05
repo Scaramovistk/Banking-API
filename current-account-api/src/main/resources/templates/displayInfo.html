@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Display Account Info</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f4f4f9;
+			margin: 0;
+			padding: 0;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+		}
+		.container {
+			background-color: #fff;
+			padding: 20px;
+			border-radius: 8px;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+			max-width: 400px;
+			width: 100%;
+		}
+		h1 {
+			text-align: center;
+			color: #333;
+		}
+		.account-info {
+			margin-top: 15px;
+		}
+		.account-info p {
+			margin: 5px 0;
+			color: #555;
+		}
+		.account-info ul {
+			list-style-type: none;
+			padding: 0;
+		}
+		.account-info li {
+			background-color: #f9f9f9;
+			border: 1px solid #ddd;
+			padding: 8px;
+			margin-bottom: 5px;
+			border-radius: 4px;
+		}
+		form {
+			display: flex;
+			flex-direction: column;
+		}
+		label {
+			margin-bottom: 5px;
+			color: #555;
+		}
+		input {
+			padding: 10px;
+			margin-bottom: 15px;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+		}
+		button {
+			padding: 10px 20px;
+			margin-bottom: 10px;
+			background-color: #4CAF50;
+			color: white;
+			border: none;
+			border-radius: 4px;
+			cursor: pointer;
+			transition: background-color 0.3s ease;
+		}
+		button:hover {
+			background-color: #45a049;
+		}
+		.navigation-button {
+			background-color: #008CBA;
+		}
+		.navigation-button:hover {
+			background-color: #007BB5;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<h1>Display Account Info</h1>
+		<form id="getAccountForm">
+			<label for="customerID">Customer ID:</label>
+			<input type="text" id="customerID" name="customerID" required>
+			<button type="submit">Get Account Info</button>
+		</form>
+		<div class="account-info" id="accountInfo"></div>
+		<button class="navigation-button" onclick="window.location.href='/'">Create Account</button>
+	</div>
+
+	<script>
+		document.getElementById('getAccountForm').addEventListener('submit', function(event) {
+			event.preventDefault();
+
+			const customerID = document.getElementById('customerID').value;
+			const url = `https://localhost:8443/api/v1/accounts/current-accounts/${customerID}`;
+
+			fetch(url)
+				.then(response => {
+					if (response.ok) {
+						return response.json();
+					} else {
+						throw new Error('Account not found!');
+					}
+				})
+				.then(data => {
+					const accountInfo = document.getElementById('accountInfo');
+					accountInfo.innerHTML = `
+						<p><strong>Customer ID:</strong> ${data.customerID}</p>
+						<p><strong>Name:</strong> ${data.name}</p>
+						<p><strong>Surname:</strong> ${data.surname}</p>
+						<p><strong>Balance:</strong> ${data.balance}</p>
+						<p><strong>Transactions:</strong></p>
+						<ul>
+							${data.ledger.map(transaction => `
+								<li>ID: ${transaction.transactionID}, Amount: ${transaction.amount}</li>
+							`).join('')}
+						</ul>
+					`;
+				})
+				.catch(error => {
+					const accountInfo = document.getElementById('accountInfo');
+					accountInfo.innerHTML = `<p style="color: red;">${error.message}</p>`;
+				});
+		});
+	</script>
+</body>
+</html>

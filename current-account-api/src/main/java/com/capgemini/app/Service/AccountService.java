@@ -5,8 +5,9 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
-import com.capgemini.app.Entity.Account;
-import com.capgemini.app.Factory.AccountFactory;
+import com.capgemini.app.Abstract.Account;
+import com.capgemini.app.Entity.Transaction;
+import com.capgemini.app.Factory.CurrentAccountFactory;
 import com.capgemini.app.Repository.AccountRepository;
 
 @Service
@@ -14,44 +15,51 @@ public class AccountService {
 
 	private static AccountRepository repository = AccountRepository.getInstance();
 
-	public static boolean createCurrentAccount(UUID customerID, BigDecimal balance) {
-		Account newAccount = AccountFactory.createAccount(customerID, "Bruce", "Lee"); // Take User info and replace
-
-		if (newAccount == null) {
+	public static boolean buildCurrentAccount(UUID customerID, BigDecimal balance) {
+		if (!isValidInput(customerID, balance)) {
 			return false;
 		}
 
-		// Add enum for account type
-		if (!balance.equals(BigDecimal.ZERO)) {
-			newAccount.addTransaction(balance);
+		Account userAccount = repository.getAccount(customerID);
+		Account newAccount = CurrentAccountFactory.createAccount(customerID, userAccount.getName(),
+				userAccount.getSurname());
+		if (newAccount != null) {
+			repository.saveCurrentAccount(newAccount);
+			if (balance.compareTo(BigDecimal.ZERO) != 0) {
+				Transaction transaction = TransactionService.buildTransaction(newAccount, balance);
+				TransactionService.addTransaction(newAccount, transaction);
+				updateAccount(newAccount);
+			}
+			return true;
 		}
-		repository.saveAccount(newAccount);
-		return true;
+		return false;
 	}
 
-	public static String getCurrentAccount(UUID customerID) {
-		Account account = repository.getAccount(customerID);
+	private static boolean isValidInput(UUID customerID, BigDecimal balance) {
+		return customerID != null && balance != null && balance.compareTo(BigDecimal.ZERO) >= 0
+				&& repository.checkAccountID(customerID);
+	}
+
+	public static Account getCurrentAccount(UUID customerID) {
+		Account account = repository.getCurrentAccount(customerID);
 		if (account == null) {
 			return null;
 		}
-		StringBuilder str = new StringBuilder(); //Move all to a Builder
-		str.append(account.getCustomerID().toString());
-		str.append(" ");
-		str.append(account.getName());
-		str.append(" ");
-		str.append(account.getSurname());
-		str.append(" ");
-		str.append(account.getBalance().toString());
-		str.append('\n'); //Is it needed?
-		// Missing transactions
-		return str.toString();
+		return account;
+	}
+
+	public static boolean updateAccount(Account account) {
+		if (account != null) {
+			repository.updateCurrentAccount(account);
+			return true;
+		}
+		return false;
 	}
 
 	public static boolean deleteAccount(UUID customerID) {
-		Account account = repository.getAccount(customerID);
-
+		Account account = repository.getCurrentAccount(customerID);
 		if (account != null) {
-			repository.deleteAccount(customerID);
+			repository.deleteCurrentAccount(customerID);
 			return true;
 		}
 		return false;
