@@ -10,8 +10,8 @@ import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.capgemini.app.Entity.Account;
-import com.capgemini.app.Factory.AccountFactory;
+import com.capgemini.app.Abstract.Account;
+import com.capgemini.app.Entity.CurrentAccount;
 import com.capgemini.app.Repository.AccountRepository;
 
 public class AccountFactoryTest {
@@ -26,7 +26,7 @@ public class AccountFactoryTest {
 	@Test
 	public void createAccountWithValidDataTest() {
 		UUID customerID = UUID.randomUUID();
-		Account account = AccountFactory.createAccount(customerID, "Bruce", "Lee");
+		Account account = CurrentAccountFactory.createAccount(customerID, "Bruce", "Lee");
 		assertNotNull(account);
 		assertEquals(customerID, account.getCustomerID());
 		assertEquals("Bruce", account.getName());
@@ -36,24 +36,24 @@ public class AccountFactoryTest {
 	@Test
 	public void createAccountWithExistingCustomerIDTest() {
 		UUID customerID = UUID.randomUUID();
-		Account existingAccount = new Account(customerID, "Existing", "User");
-		repository.saveAccount(existingAccount);
+		Account existingAccount = new CurrentAccount(customerID, "Existing", "User");
+		repository.saveCurrentAccount(existingAccount);
 
-		Account account = AccountFactory.createAccount(customerID, "Bruce", "Lee");
-		assertNull(account); // Account creation should fail because the customer ID already exists
+		Account account = CurrentAccountFactory.createAccount(customerID, "Bruce", "Lee");
+		assertNull(account);
 	}
 
 	@Test
 	public void createAccountWithNullCustomerIDTest() {
 		assertThrows(IllegalArgumentException.class, () -> {
-			AccountFactory.createAccount(null, "Bruce", "Lee");
+			CurrentAccountFactory.createAccount(null, "Bruce", "Lee");
 		});
 	}
 
 	@Test
 	public void createAccountWithEmptyNameTest() {
 		UUID customerID = UUID.randomUUID();
-		Account account = AccountFactory.createAccount(customerID, "", "Lee");
+		Account account = CurrentAccountFactory.createAccount(customerID, "", "Lee");
 		assertNotNull(account);
 		assertEquals(customerID, account.getCustomerID());
 		assertEquals("", account.getName());
@@ -63,7 +63,7 @@ public class AccountFactoryTest {
 	@Test
 	public void createAccountWithEmptySurnameTest() {
 		UUID customerID = UUID.randomUUID();
-		Account account = AccountFactory.createAccount(customerID, "Bruce", "");
+		Account account = CurrentAccountFactory.createAccount(customerID, "Bruce", "");
 		assertNotNull(account);
 		assertEquals(customerID, account.getCustomerID());
 		assertEquals("Bruce", account.getName());
@@ -74,7 +74,7 @@ public class AccountFactoryTest {
 	public void createAccountWithNullNameTest() {
 		UUID customerID = UUID.randomUUID();
 		assertThrows(IllegalArgumentException.class, () -> {
-			AccountFactory.createAccount(customerID, null, "Lee");
+			CurrentAccountFactory.createAccount(customerID, null, "Lee");
 		});
 	}
 
@@ -82,7 +82,7 @@ public class AccountFactoryTest {
 	public void createAccountWithNullSurnameTest() {
 		UUID customerID = UUID.randomUUID();
 		assertThrows(IllegalArgumentException.class, () -> {
-			AccountFactory.createAccount(customerID, "Bruce", null);
+			CurrentAccountFactory.createAccount(customerID, "Bruce", null);
 		});
 	}
 }

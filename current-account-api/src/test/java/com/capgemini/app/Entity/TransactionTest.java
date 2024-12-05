@@ -8,8 +8,6 @@ import java.math.BigDecimal;
 
 import org.junit.jupiter.api.Test;
 
-import com.capgemini.app.Entity.Transaction;
-
 public class TransactionTest {
 
 	@Test

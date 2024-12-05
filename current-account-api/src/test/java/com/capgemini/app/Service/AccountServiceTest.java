@@ -3,8 +3,8 @@ package com.capgemini.app.Service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -12,10 +12,8 @@ import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.capgemini.app.Entity.Account;
+import com.capgemini.app.Abstract.Account;
 import com.capgemini.app.Entity.Transaction;
-import com.capgemini.app.Service.AccountService;
-import com.capgemini.app.Service.TransactionService;
 import com.capgemini.app.Repository.AccountRepository;
 
 public class AccountServiceTest {
@@ -33,7 +31,7 @@ public class AccountServiceTest {
 		boolean result = AccountService.buildCurrentAccount(uuid, BigDecimal.valueOf(10));
 		assertTrue(result);
 
-		Account account = repository.getAccount(uuid);
+		Account account = repository.getCurrentAccount(uuid);
 		assertNotNull(account);
 		assertEquals(BigDecimal.valueOf(10.00).setScale(2), account.getBalance());
 	}
@@ -44,7 +42,7 @@ public class AccountServiceTest {
 		boolean result = AccountService.buildCurrentAccount(uuid, BigDecimal.ZERO);
 		assertTrue(result);
 
-		Account account = repository.getAccount(uuid);
+		Account account = repository.getCurrentAccount(uuid);
 		assertNotNull(account);
 		assertEquals(BigDecimal.ZERO.setScale(2), account.getBalance());
 	}
@@ -60,7 +58,7 @@ public class AccountServiceTest {
 	@Test
 	public void retrieveNonExistentAccount() {
 		UUID uuid = UUID.randomUUID();
-		Account account = repository.getAccount(uuid);
+		Account account = repository.getCurrentAccount(uuid);
 
 		assertNull(account);
 	}
@@ -75,8 +73,8 @@ public class AccountServiceTest {
 		assertTrue(result1);
 		assertTrue(result2);
 
-		Account account1 = repository.getAccount(uuid1);
-		Account account2 = repository.getAccount(uuid2);
+		Account account1 = repository.getCurrentAccount(uuid1);
+		Account account2 = repository.getCurrentAccount(uuid2);
 
 		assertNotNull(account1);
 		assertNotNull(account2);
@@ -90,7 +88,7 @@ public class AccountServiceTest {
 		boolean result = AccountService.buildCurrentAccount(uuid, BigDecimal.valueOf(20));
 		assertTrue(result);
 
-		Account account = repository.getAccount(uuid);
+		Account account = repository.getCurrentAccount(uuid);
 		Transaction transaction = TransactionService.buildTransaction(account, BigDecimal.valueOf(30));
 		TransactionService.addTransaction(account, transaction);
 

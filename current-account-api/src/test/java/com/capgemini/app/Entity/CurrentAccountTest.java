@@ -10,20 +10,19 @@ import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 
-import com.capgemini.app.Entity.Account;
-import com.capgemini.app.Entity.Transaction;
+import com.capgemini.app.Abstract.Account;
 
-public class AccountTest {
+public class CurrentAccountTest {
 
 	@Test
 	public void balanceTest() {
-		Account account = new Account(UUID.randomUUID(), "Bruce", "Lee");
+		Account account = new CurrentAccount(UUID.randomUUID(), "Bruce", "Lee");
 		assertEquals(BigDecimal.valueOf(0.00).setScale(2), account.getBalance());
 	}
 
 	@Test
 	public void oneTransactionTest() {
-		Account account = new Account(UUID.randomUUID(), "Bruce", "Lee");
+		Account account = new CurrentAccount(UUID.randomUUID(), "Bruce", "Lee");
 		Transaction transaction = new Transaction("1", BigDecimal.valueOf(10));
 		account.addTransaction(transaction);
 		assertEquals(BigDecimal.valueOf(10.00).setScale(2), account.getBalance());
@@ -31,7 +30,7 @@ public class AccountTest {
 
 	@Test
 	public void negativeTransactionTest() {
-		Account account = new Account(UUID.randomUUID(), "Bruce", "Lee");
+		Account account = new CurrentAccount(UUID.randomUUID(), "Bruce", "Lee");
 		Transaction transaction1 = new Transaction("1", BigDecimal.valueOf(10));
 		Transaction transaction2 = new Transaction("2", BigDecimal.valueOf(-5));
 		account.addTransaction(transaction1);
@@ -41,7 +40,7 @@ public class AccountTest {
 
 	@Test
 	public void floatPointTransactionTest() {
-		Account account = new Account(UUID.randomUUID(), "Bruce", "Lee");
+		Account account = new CurrentAccount(UUID.randomUUID(), "Bruce", "Lee");
 		Transaction transaction1 = new Transaction("1", BigDecimal.valueOf(10));
 		Transaction transaction2 = new Transaction("2", BigDecimal.valueOf(-5.5));
 		account.addTransaction(transaction1);
@@ -51,7 +50,7 @@ public class AccountTest {
 
 	@Test
 	public void multipleTransactionTest() {
-		Account account = new Account(UUID.randomUUID(), "Bruce", "Lee");
+		Account account = new CurrentAccount(UUID.randomUUID(), "Bruce", "Lee");
 
 		Transaction transaction1 = new Transaction("1", BigDecimal.valueOf(10));
 		Transaction transaction2 = new Transaction("2", BigDecimal.valueOf(-5.5));
@@ -68,7 +67,7 @@ public class AccountTest {
 
 	@Test
 	public void nullTransactionTest() {
-		Account account = new Account(UUID.randomUUID(), "Bruce", "Lee");
+		Account account = new CurrentAccount(UUID.randomUUID(), "Bruce", "Lee");
 		assertThrows(IllegalArgumentException.class, () -> {
 			account.addTransaction(null);
 		});
@@ -76,7 +75,7 @@ public class AccountTest {
 
 	@Test
 	public void truncatedTransactionTest() {
-		Account account = new Account(UUID.randomUUID(), "Bruce", "Lee");
+		Account account = new CurrentAccount(UUID.randomUUID(), "Bruce", "Lee");
 
 		Transaction transaction1 = new Transaction("1", BigDecimal.valueOf(10));
 		Transaction transaction2 = new Transaction("2", BigDecimal.valueOf(-5.5));
@@ -93,7 +92,7 @@ public class AccountTest {
 
 	@Test
 	public void largeValueTransactionTest() {
-		Account account = new Account(UUID.randomUUID(), "Bruce", "Lee");
+		Account account = new CurrentAccount(UUID.randomUUID(), "Bruce", "Lee");
 
 		Transaction transaction1 = new Transaction("1", BigDecimal.valueOf(1_000_000_000));
 		Transaction transaction2 = new Transaction("2", BigDecimal.valueOf(-999_999_999.99));
@@ -106,13 +105,13 @@ public class AccountTest {
 
 	@Test
 	public void noTransactionsTest() {
-		Account account = new Account(UUID.randomUUID(), "Bruce", "Lee");
+		Account account = new CurrentAccount(UUID.randomUUID(), "Bruce", "Lee");
 		assertEquals(BigDecimal.valueOf(0.00).setScale(2), account.getBalance());
 	}
 
 	@Test
 	public void emptyLedgerBalanceTest() {
-		Account account = new Account(UUID.randomUUID(), "Bruce", "Lee");
+		Account account = new CurrentAccount(UUID.randomUUID(), "Bruce", "Lee");
 
 		account.setLedger(new ArrayList<>());
 		assertEquals(BigDecimal.valueOf(0.00).setScale(2), account.getBalance());
@@ -120,7 +119,7 @@ public class AccountTest {
 
 	@Test
 	public void ledgerIntegrityTest() {
-		Account account = new Account(UUID.randomUUID(), "Bruce", "Lee");
+		Account account = new CurrentAccount(UUID.randomUUID(), "Bruce", "Lee");
 
 		Transaction transaction1 = new Transaction("1", BigDecimal.valueOf(10));
 		Transaction transaction2 = new Transaction("2", BigDecimal.valueOf(-5.5));
@@ -138,7 +137,7 @@ public class AccountTest {
 
 	@Test
 	public void invalidTransactionTest() {
-		Account account = new Account(UUID.randomUUID(), "Bruce", "Lee");
+		Account account = new CurrentAccount(UUID.randomUUID(), "Bruce", "Lee");
 
 		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
 			account.addTransaction(null);
@@ -149,7 +148,7 @@ public class AccountTest {
 
 	@Test
 	public void updateBalanceAfterLedgerModificationTest() {
-		Account account = new Account(UUID.randomUUID(), "Bruce", "Lee");
+		Account account = new CurrentAccount(UUID.randomUUID(), "Bruce", "Lee");
 
 		Transaction transaction1 = new Transaction("1", BigDecimal.valueOf(50.25));
 		Transaction transaction2 = new Transaction("2", BigDecimal.valueOf(-20.10));
