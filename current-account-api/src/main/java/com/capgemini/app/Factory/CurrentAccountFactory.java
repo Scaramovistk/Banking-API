@@ -2,14 +2,14 @@ package com.capgemini.app.Factory;
 
 import java.util.UUID;
 
-import com.capgemini.app.Entity.Account;
+import com.capgemini.app.Abstract.Account;
+import com.capgemini.app.Entity.CurrentAccount;
 import com.capgemini.app.Repository.AccountRepository;
 
-public class AccountFactory {
+public class CurrentAccountFactory {
 	private static AccountRepository repository = AccountRepository.getInstance();
 
-	private AccountFactory() {
-
+	private CurrentAccountFactory() {
 	}
 
 	public static Account createAccount(UUID customerID, String name, String surname) {
@@ -17,7 +17,7 @@ public class AccountFactory {
 			throw new IllegalArgumentException("Customer ID, name, and surname cannot be null");
 		}
 		if (!repository.checkID(customerID)) {
-			return new Account(customerID, name, surname);
+			return new CurrentAccount(customerID, name, surname);
 		}
 		return null;
 	}
