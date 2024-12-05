@@ -1,111 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Current Account</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .container {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            max-width: 400px;
-            width: 100%;
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-        form {
-            display: flex;
-            flex-direction: column;
-        }
-        label {
-            margin-bottom: 5px;
-            color: #555;
-        }
-        input {
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        button {
-            padding: 10px 20px;
-            margin-bottom: 10px; /* Added margin for spacing */
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        .navigation-button {
-            background-color: #008CBA; /* Different color for navigation button */
-        }
-        .navigation-button:hover {
-            background-color: #007BB5;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Create Current Account</h1>
-        <form id="createAccountForm">
-            <label for="customerID">Customer ID:</label>
-            <input type="text" id="customerID" name="customerID" required>
-            <label for="initialCredit">Initial Credit:</label>
-            <input type="number" id="initialCredit" name="initialCredit" required>
-            <button type="submit">Create Account</button>
-        </form>
-        <button class="navigation-button" onclick="window.location.href='api/v1/accounts/current-accounts/display'">Go to Display Info</button>
-    </div>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Create Current Account</title>
+		<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f4f4f9;
+			margin: 0;
+			padding: 0;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+		}
+		.container {
+			background-color: #fff;
+			padding: 20px;
+			border-radius: 8px;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+			max-width: 400px;
+			width: 100%;
+		}
+		h1 {
+			text-align: center;
+			color: #333;
+		}
+		form {
+			display: flex;
+			flex-direction: column;
+		}
+		label {
+			margin-bottom: 5px;
+			color: #555;
+		}
+		input {
+			padding: 10px;
+			margin-bottom: 15px;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+		}
+		button {
+			padding: 10px 20px;
+			margin-bottom: 10px;
+			background-color: #4CAF50;
+			color: white;
+			border: none;
+			border-radius: 4px;
+			cursor: pointer;
+			transition: background-color 0.3s ease;
+		}
+		button:hover {
+			background-color: #45a049;
+		}
+		.navigation-button {
+			background-color: #008CBA;
+		}
+		.navigation-button:hover {
+			background-color: #007BB5;
+		}
+	</style>
+	</head>
+	<body>
+		<div class="container">
+			<h1>Create Current Account</h1>
+			<form id="createAccountForm">
+				<label for="customerID">Customer ID:</label>
+				<input type="text" id="customerID" name="customerID" required>
+				<label for="initialCredit">Initial Credit:</label>
+				<input type="number" id="initialCredit" name="initialCredit" required>
+				<button type="submit">Create Account</button>
+			</form>
+			<button class="navigation-button"
+				onclick="window.location.href='api/v1/accounts/current-accounts/display'">Display
+				Account Info</button>
+		</div>
 
-    <script>
-        document.getElementById('createAccountForm').addEventListener('submit', function(event) {
-            event.preventDefault();
+		<script>
+		document.getElementById('createAccountForm').addEventListener('submit', function(event) {
+			event.preventDefault();
 
-            const customerID = document.getElementById('customerID').value;
-            const initialCredit = parseFloat(document.getElementById('initialCredit').value);
-            const url = `https://localhost:8443/api/v1/accounts/current-accounts`;
+			const customerID = document.getElementById('customerID').value;
+			const initialCredit = parseFloat(document.getElementById('initialCredit').value);
+			const url = `https://localhost:8443/api/v1/accounts/current-accounts`;
 
-            const data = {
-                id: customerID,
-                balance: initialCredit
-            };
+			const data = {
+				id: customerID,
+				balance: initialCredit
+			};
 
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => {
-                if (response.ok) {
-                    alert('Account created successfully!');
-                } else {
-                    throw new Error('Account creation failed!');
-                }
-            })
-            .catch(error => {
-                alert(error.message);
-            });
-        });
-    </script>
-</body>
+			fetch(url, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(data)
+			})
+			.then(response => {
+				if (response.ok) {
+					alert('Account created successfully!');
+				} else {
+					throw new Error('Account creation failed!');
+				}
+			})
+			.catch(error => {
+				alert(error.message);
+			});
+		});
+	</script>
+	</body>
 </html>
