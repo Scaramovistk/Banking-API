@@ -24,7 +24,7 @@ public class AccountController {
 	}
 
 	@GetMapping("/display")
-	public String displayAccountInfo() {
+	public String displayAccountInfoPage() {
 		return "displayInfo";
 	}
 
