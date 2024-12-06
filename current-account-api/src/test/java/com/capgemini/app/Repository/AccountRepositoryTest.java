@@ -46,10 +46,10 @@ public class AccountRepositoryTest {
 	}
 
 	@Test
-	public void testCheckID() {
+	public void testcheckCurrentAccountId() {
 		repository.saveCurrentAccount(account);
-		assertTrue(repository.checkID(customerID));
-		assertFalse(repository.checkID(UUID.randomUUID()));
+		assertTrue(repository.checkCurrentAccountId(customerID));
+		assertFalse(repository.checkCurrentAccountId(UUID.randomUUID()));
 	}
 
 	@Test

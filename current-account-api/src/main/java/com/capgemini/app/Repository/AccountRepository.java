@@ -8,17 +8,16 @@ import com.capgemini.app.Abstract.Account;
 public class AccountRepository {
 
 	static private AccountRepository _instance;
-	static private HashMap <UUID, Account> _accounts = new HashMap<UUID, Account>();
-	static private HashMap <UUID, Account> _current_accounts = new HashMap<UUID, Account>();
+	static private HashMap<UUID, Account> _accounts = new HashMap<UUID, Account>();
+	static private HashMap<UUID, Account> _current_accounts = new HashMap<UUID, Account>();
 
 	private AccountRepository() {
 	}
 
-	public static AccountRepository getInstance()
-	{
+	public static AccountRepository getInstance() {
 		if (_instance == null)
 			_instance = new AccountRepository();
-		return(_instance);
+		return (_instance);
 	}
 
 	public Account getAccount(UUID accountID) {
@@ -57,7 +56,7 @@ public class AccountRepository {
 		_current_accounts.remove(customerID);
 	}
 
-	public boolean checkID(UUID customerID) {
+	public boolean checkCurrentAccountId(UUID customerID) {
 		return _current_accounts.containsKey(customerID);
 	}
 }

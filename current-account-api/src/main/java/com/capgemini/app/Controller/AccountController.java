@@ -42,7 +42,7 @@ public class AccountController {
 		UUID id = accountRequest.getId();
 		BigDecimal balance = accountRequest.getBalance();
 
-		if (AccountService.buildCurrentAccount(id, BigDecimal.ZERO)) {
+		if (balance.compareTo(BigDecimal.ZERO) >= 0 && AccountService.buildCurrentAccount(id, BigDecimal.ZERO)) {
 			Account account = AccountService.getCurrentAccount(id);
 			if (account != null) {
 				if (balance.compareTo(BigDecimal.ZERO) > 0) {

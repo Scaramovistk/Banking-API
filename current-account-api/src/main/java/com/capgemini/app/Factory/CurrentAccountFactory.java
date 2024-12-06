@@ -16,7 +16,7 @@ public class CurrentAccountFactory {
 		if (customerID == null || name == null || surname == null) {
 			throw new IllegalArgumentException("Customer ID, name, and surname cannot be null");
 		}
-		if (!repository.checkID(customerID)) {
+		if (!repository.checkCurrentAccountId(customerID)) {
 			return new CurrentAccount(customerID, name, surname);
 		}
 		return null;

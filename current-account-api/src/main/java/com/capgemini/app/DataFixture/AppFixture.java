@@ -37,9 +37,9 @@ public class AppFixture {
 	}
 
 	public static void loadCurrentAccountData() {
-		Account account1 = CurrentAccountFactory.createAccount(UUID.randomUUID(), "John", "Doe");
-		Account account2 = CurrentAccountFactory.createAccount(UUID.randomUUID(), "Jane", "Smith");
-		Account account3 = CurrentAccountFactory.createAccount(UUID.randomUUID(), "Alice", "Johnson");
+		Account account1 = CurrentAccountFactory.createAccount(UUID.randomUUID(), "Charlie", "Strauss");
+		Account account2 = CurrentAccountFactory.createAccount(UUID.randomUUID(), "Bob", "Williams");
+		Account account3 = CurrentAccountFactory.createAccount(UUID.randomUUID(), "Stefan", "Brown");
 
 		account1.addTransaction(
 				TransactionFactory.createTransaction(account1.getCustomerID(), BigDecimal.valueOf(100.00)));
