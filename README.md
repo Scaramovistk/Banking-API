@@ -26,20 +26,25 @@ The **Financial-API** is a backend service that enables the creation and managem
        - Customer's `Name` and `Surname`.
        - Account `Balance`.
        - Associated `Transactions`.
+
+2. **Bonuses**:
+   - Modular services for Accounts and Transactions.
+   - Provide a basic frontend for user interaction.
+   - Implement CI/CD pipelines for deployment.
+
 ---
 
 ## **Getting Started**
 
 ### **Prerequisites**
-- Docker installed on your system.
+- Docker and docker-compose installed on your system.
 - Git for cloning the repository.
 - A tool like `curl` for interacting with the API.
 
 ### **Setup Instructions**
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/Scaramovistk/Banking-API.git
-   cd Banking-API/
+   git clone https://github.com/Scaramovistk/Banking-API.git && cd Banking-API/
    ```
 
 2. **Build and Run the Application**:
@@ -52,7 +57,7 @@ The **Financial-API** is a backend service that enables the creation and managem
      docker compose up banking-api
      ```
 
-   - The application will start a Tomcat server at `https://localhost:8443`.
+   - The server will start on port `8443`.
 
 ---
 
@@ -60,16 +65,22 @@ The **Financial-API** is a backend service that enables the creation and managem
 
 You can interact with the API using a terminal or a browser.
 
+### Browser
+
+Open `https://localhost:8443/` to create your account or get information about other accounts.
+
 ### **1. Create a Current Account**
 Send a `POST` request to create a new account:
 ```bash
-curl -X POST https://localhost:8443/api/v1/accounts/current-accounts \
+curl -X POST -k https://localhost:8443/api/v1/accounts/current-accounts \
      -H "Content-Type: application/json" \
      -d '{
-           "id": "customer-id",
-           "balance": "initial-credit"
+           "id": "${customerID}",
+           "balance": "${initial_balance}"
          }'
 ```
+
+Replace `${customerID}` and `${initial_balance}` with the real value.
 
 ### **2. Retrieve Account Information**
 Send a `GET` request to fetch details of an existing account:
